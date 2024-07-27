@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
   res.send("Hello World! database is not set");
 })
 
+app.get("/health", (req, res) => {
+  res.send("Healthy");
+});
+
 app.get("/allDocs", async (req, res) => {
   try {
     console.log("Fetching records...");
