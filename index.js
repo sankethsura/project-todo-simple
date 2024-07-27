@@ -62,6 +62,7 @@ app.post("/create", async (req, res) => {
 
 app.get("/all", async (req, res) => {
   try {
+    console.log("Getting all Results...")
     const docs = await Record.find({ isDeleted: false });
     res.status(200).send(docs);
   } catch (err) {
@@ -106,6 +107,7 @@ app.post("/delete", async (req, res) => {
 
 app.listen(port, async () => {
   try {
+    console.log("Connecting to the database...");
     await mongoose.connect(process.env.DATABASE)
     console.log(`listening at http://localhost:${port}`);
   } catch (e) {
