@@ -11,9 +11,6 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  if(process.env.DATABASE) {
-    res.send(`Hello World! Database is set - ${process.env.DATABASE}`);
-  }
   res.send("Hello World! database is not set");
 })
 
