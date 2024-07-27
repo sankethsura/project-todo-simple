@@ -11,6 +11,14 @@
         "src": "/(.*)",
         "dest": "/index.js"
       }
-    ]
+    ],
+    "env": {
+      "DATABASE": "@database"
+    },
+    "functions": {
+      "index.js": {
+        "maxDuration": 10
+      }
+    }
   }
   
