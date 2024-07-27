@@ -11,23 +11,24 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  try {
-    console.log("Fetching records...");
-    const docs = await Record.find({});
-    console.log("Records fetched");
-    if (docs.length === 0) {
-      const record = new Record({
-        title: "Test",
-        completed: false,
-      });
-      await record.save();
-      console.log("Test record created");
-    }
-    res.send("Hello World!");
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Internal Server Error");
-  }
+  res.send("Hello World!");
+  // try {
+  //   console.log("Fetching records...");
+  //   const docs = await Record.find({});
+  //   console.log("Records fetched");
+  //   if (docs.length === 0) {
+  //     const record = new Record({
+  //       title: "Test",
+  //       completed: false,
+  //     });
+  //     await record.save();
+  //     console.log("Test record created");
+  //   }
+  //   res.send("Hello World!");
+  // } catch (err) {
+  //   console.log(err);
+  //   res.status(500).send("Internal Server Error");
+  // }
 });
 
 app.post("/create", async (req, res) => {
@@ -94,13 +95,13 @@ app.post("/delete", async (req, res) => {
 
 app.listen(port, async () => {
   try {
-    await mongoose.connect(process.env.DATABASE, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
-      socketTimeoutMS: 45000 // 45 seconds timeout
-    });
-    console.log(`Example app listening at http://localhost:${port}`);
+    // await mongoose.connect(process.env.DATABASE, {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true,
+    //   serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+    //   socketTimeoutMS: 45000 // 45 seconds timeout
+    // });
+    console.log(`listening at http://localhost:${port}`);
   } catch (e) {
     console.log(e);
   }
