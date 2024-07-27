@@ -11,8 +11,12 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World! database is not set");
-})
+  if (process.env.DATABASE) {
+    res.send(`Hello World! Database is set - ${process.env.DATABASE}`);
+  } else {
+    res.send("Hello World! Database is not set");
+  }
+});
 
 app.get("/health", (req, res) => {
   res.send("Healthy");
@@ -31,7 +35,7 @@ app.get("/allDocs", async (req, res) => {
       await record.save();
       console.log("Test record created");
     }
-    res.send("Hello World!");
+    res.send(docs);
   } catch (err) {
     console.log(err);
     res.status(500).send("Internal Server Error");
@@ -102,9 +106,14 @@ app.post("/delete", async (req, res) => {
 
 app.listen(port, async () => {
   try {
-    await mongoose.connect(process.env.DATABASE);
+    await mongoose.connect(process.env.DATABASE, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+      socketTimeoutMS: 45000 // 45 seconds timeout
+    });
     console.log(`listening at http://localhost:${port}`);
   } catch (e) {
-    console.log(e);
+    console.log("Error connecting to the database", e);
   }
 });
