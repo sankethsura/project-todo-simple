@@ -98,12 +98,12 @@ app.post("/delete", async (req, res) => {
 
 app.listen(port, async () => {
   try {
-    // await mongoose.connect(process.env.DATABASE, {
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
-    //   serverSelectionTimeoutMS: 5000, // 5 seconds timeout
-    //   socketTimeoutMS: 45000 // 45 seconds timeout
-    // });
+    await mongoose.connect(process.env.DATABASE, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+      socketTimeoutMS: 45000 // 45 seconds timeout
+    });
     console.log(`listening at http://localhost:${port}`);
   } catch (e) {
     console.log(e);
