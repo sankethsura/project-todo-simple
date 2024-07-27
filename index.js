@@ -8,11 +8,13 @@ const cors = require("cors");
 
 dotenv.config();
 app.use(cors());
-app.use(express.json()); // Add this line to parse request body as JSON
+app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
+    console.log("Fetching records...");
     const docs = await Record.find({});
+    console.log("Records fetched");
     if (docs.length === 0) {
       const record = new Record({
         title: "Test",
@@ -24,12 +26,13 @@ app.get("/", async (req, res) => {
     res.send("Hello World!");
   } catch (err) {
     console.log(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-
 app.post("/create", async (req, res) => {
   const title = req.body.title;
+  console.log("Creating record with title:", title);
 
   try {
     const record = new Record({
@@ -37,20 +40,21 @@ app.post("/create", async (req, res) => {
       completed: false,
     });
     await record.save();
+    console.log("Record created");
     res.send("Record created");
   } catch (err) {
     console.log(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 app.get("/all", async (req, res) => {
   try {
-    const docs = await Record.find({
-      isDeleted: false,
-    });
+    const docs = await Record.find({ isDeleted: false });
     res.send(docs);
   } catch (err) {
     console.log(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -58,15 +62,16 @@ app.post("/completed", async (req, res) => {
   const _id = req.body._id;
   try {
     const record = await Record.findOne({ _id });
-    if (record.completed) {
-      record.completed = false;
-    }else{
-      record.completed = true;
+    if (record) {
+      record.completed = !record.completed;
+      await record.save();
+      res.send("Record updated");
+    } else {
+      res.status(404).send("Record not found");
     }
-    await record.save();
-    res.send("Record updated");
   } catch (err) {
     console.log(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -74,19 +79,27 @@ app.post("/delete", async (req, res) => {
   const _id = req.body._id;
   try {
     const record = await Record.findOne({ _id });
-    record.isDeleted = true;
-    await record.save();
-    res.send("Record deleted");
+    if (record) {
+      record.isDeleted = true;
+      await record.save();
+      res.send("Record deleted");
+    } else {
+      res.status(404).send("Record not found");
+    }
   } catch (err) {
     console.log(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-//Creating a todo application
-
 app.listen(port, async () => {
   try {
-    await mongoose.connect(process.env.DATABASE);
+    await mongoose.connect(process.env.DATABASE, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+      socketTimeoutMS: 45000 // 45 seconds timeout
+    });
     console.log(`Example app listening at http://localhost:${port}`);
   } catch (e) {
     console.log(e);
