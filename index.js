@@ -11,7 +11,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World! - ",process.env.DATABASE);
+  if(process.env.DATABASE) {
+    res.send("Hello World! Database is set");
+  }
+  res.send("Hello World! database is not set");
 })
 
 app.get("/allDocs", async (req, res) => {
