@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const Record = require("./models/records");
@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Hello World! - ",process.env.DATABASE);
 })
 
 app.get("/allDocs", async (req, res) => {
